@@ -51,8 +51,8 @@ notes-app/
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/notes-app.git
-cd notes-app
+git clone https://github.com/rishavkumar8876/Markdown-Notes.git
+cd Markdown-Notes
 ```
 
 ---
@@ -137,12 +137,6 @@ http://localhost:5173
 
 ---
 
-## 🎥 Demo Video
-
-👉 (Add your demo video link here)
-
----
-
 ## 💡 Key Implementation Details
 
 * Implemented **debounced auto-save** to improve performance
@@ -173,6 +167,3 @@ http://localhost:5173
 
 ---
 
-## ⭐ If you like this project
-
-Give it a ⭐ on GitHub!
