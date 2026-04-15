@@ -10,57 +10,65 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
+
 app.get("/notes", (req, res) => {
-  db.all("SELECT * FROM notes", [], (err, rows) => {
-    if (err) return res.status(500).json(err);
+  try {
+    const rows = db.prepare("SELECT * FROM notes").all();
     res.json(rows);
-  });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
+
 
 
 app.post("/notes", (req, res) => {
-  const { title, content } = req.body;
+  try {
+    const { title, content } = req.body;
 
-  db.run(
-    "INSERT INTO notes (title, content) VALUES (?, ?)",
-    [title, content],
-    function (err) {
-      if (err) return res.status(500).json(err);
+    const result = db
+      .prepare("INSERT INTO notes (title, content) VALUES (?, ?)")
+      .run(title, content);
 
-      res.json({
-        id: this.lastID,
-        title,
-        content,
-      });
-    }
-  );
+    res.json({
+      id: result.lastInsertRowid,
+      title,
+      content,
+    });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
+
 
 
 app.put("/notes/:id", (req, res) => {
-  const { title, content } = req.body;
-  const { id } = req.params;
+  try {
+    const { title, content } = req.body;
+    const { id } = req.params;
 
-  db.run(
-    "UPDATE notes SET title = ?, content = ? WHERE id = ?",
-    [title, content, id],
-    function (err) {
-      if (err) return res.status(500).json(err);
+    db.prepare(
+      "UPDATE notes SET title = ?, content = ? WHERE id = ?"
+    ).run(title, content, id);
 
-      res.json({ message: "Note updated successfully" });
-    }
-  );
+    res.json({ message: "Note updated successfully" });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
 
 
-app.delete("/notes/:id", (req, res) => {
-  const { id } = req.params;
 
-  db.run("DELETE FROM notes WHERE id = ?", id, function (err) {
-    if (err) return res.status(500).json(err);
+app.delete("/notes/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    db.prepare("DELETE FROM notes WHERE id = ?").run(id);
 
     res.json({ message: "Note deleted successfully" });
-  });
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
 
 
